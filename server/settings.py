@@ -7,22 +7,22 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-# -------------------------------------------------
 # Base Directory and Environment
-# -------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 
-# -------------------------------------------------
+
 # Basic Django Settings
-# -------------------------------------------------
+
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-default-key")
 DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "864tlzrs-8000.inc1.devtunnels.ms"]
 
-# -------------------------------------------------
+CSRF_TRUSTED_ORIGINS = ["https://864tlzrs-8000.inc1.devtunnels.ms"]
+
+
 # Installed Apps
-# -------------------------------------------------
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,9 +48,9 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-# -------------------------------------------------
+
 # Middleware
-# -------------------------------------------------
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -62,9 +62,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# -------------------------------------------------
 # URL Configuration
-# -------------------------------------------------
+
 ROOT_URLCONF = 'server.urls'
 
 TEMPLATES = [
@@ -84,9 +83,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'server.wsgi.application'
 
-# -------------------------------------------------
+
 # Database
-# -------------------------------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -94,9 +92,7 @@ DATABASES = {
     }
 }
 
-# -------------------------------------------------
 # Password Validators
-# -------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -104,27 +100,19 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# -------------------------------------------------
 # Internationalization
-# -------------------------------------------------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# -------------------------------------------------
 # Static Files
-# -------------------------------------------------
 STATIC_URL = 'static/'
 
-# -------------------------------------------------
 # Default Primary Key
-# -------------------------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# -------------------------------------------------
 # Authentication
-# -------------------------------------------------
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -133,9 +121,7 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# -------------------------------------------------
 # GOOGLE OAUTH SETTINGS
-# -------------------------------------------------
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_REDIRECT_URI = os.getenv(
@@ -143,9 +129,7 @@ GOOGLE_REDIRECT_URI = os.getenv(
     "http://127.0.0.1:8000/auth/google/callback/"
 )
 
-# -------------------------------------------------
 # GITHUB OAUTH SETTINGS
-# -------------------------------------------------
 GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
 GITHUB_REDIRECT_URI = os.getenv(
@@ -156,3 +140,13 @@ GITHUB_REDIRECT_URI = os.getenv(
 # Debug logs for sanity check
 print("🔍 GOOGLE CLIENT ID:", GOOGLE_CLIENT_ID)
 print("🔍 GITHUB CLIENT ID:", GITHUB_CLIENT_ID)
+
+# FACEBOOK OAUTH SETTINGS
+FACEBOOK_CLIENT_ID = os.getenv("FACEBOOK_CLIENT_ID")
+FACEBOOK_CLIENT_SECRET = os.getenv("FACEBOOK_CLIENT_SECRET")
+FACEBOOK_REDIRECT_URI = os.getenv(
+    "FACEBOOK_REDIRECT_URI",
+    "https://864tlzrs-8000.inc1.devtunnels.ms/auth/facebook/callback/"
+)
+
+print("🔍 FACEBOOK CLIENT ID:", FACEBOOK_CLIENT_ID)
