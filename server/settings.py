@@ -8,18 +8,13 @@ import os
 from dotenv import load_dotenv
 
 # -------------------------------------------------
-# Base Directory
+# Base Directory and Environment
 # -------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# -------------------------------------------------
-# Load environment variables
-# -------------------------------------------------
-# ✅ Correct way: convert Path → string, so dotenv can read it
 load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 
 # -------------------------------------------------
-# Security
+# Basic Django Settings
 # -------------------------------------------------
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-default-key")
 DEBUG = True
@@ -37,13 +32,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
 
-    # Allauth for Google OAuth
+    # Allauth for future OAuth management
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
 
+    # Providers
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+
+    # Custom app
     'myapp',
 ]
 
@@ -124,7 +123,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # -------------------------------------------------
-# Authentication (for allauth)
+# Authentication
 # -------------------------------------------------
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -135,11 +134,25 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # -------------------------------------------------
-# Google OAuth Settings (from .env)
+# GOOGLE OAUTH SETTINGS
 # -------------------------------------------------
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "http://127.0.0.1:8000/auth/google/callback/")
+GOOGLE_REDIRECT_URI = os.getenv(
+    "GOOGLE_REDIRECT_URI",
+    "http://127.0.0.1:8000/auth/google/callback/"
+)
 
+# -------------------------------------------------
+# GITHUB OAUTH SETTINGS
+# -------------------------------------------------
+GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
+GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
+GITHUB_REDIRECT_URI = os.getenv(
+    "GITHUB_REDIRECT_URI",
+    "http://127.0.0.1:8000/auth/github/callback/"
+)
+
+# Debug logs for sanity check
 print("🔍 GOOGLE CLIENT ID:", GOOGLE_CLIENT_ID)
-print("🔍 GOOGLE REDIRECT URI:", GOOGLE_REDIRECT_URI)
+print("🔍 GITHUB CLIENT ID:", GITHUB_CLIENT_ID)
