@@ -71,7 +71,7 @@ def github_login_redirect(request):
         "scope": scope,
     }
     auth_url = f"{GITHUB_AUTH_URL}?{urlencode(params)}"
-    return HttpResponseRedirect(auth_url)
+    return JsonResponse({"auth_url": auth_url})
 
 
 @csrf_exempt

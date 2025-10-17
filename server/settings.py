@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # Custom app
     'myapp',
+    'job',
 ]
 
 SITE_ID = 1
@@ -150,3 +151,8 @@ FACEBOOK_REDIRECT_URI = os.getenv(
 )
 
 print("🔍 FACEBOOK CLIENT ID:", FACEBOOK_CLIENT_ID)
+
+
+# WEATHER API SETTINGS
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
+print("🌦️ WEATHER API KEY:", WEATHER_API_KEY)
