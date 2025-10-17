@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     # Providers
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
-
+    'django_crontab',
+     
     # Custom app
     'myapp',
     'job',
@@ -155,4 +156,9 @@ print("🔍 FACEBOOK CLIENT ID:", FACEBOOK_CLIENT_ID)
 
 # WEATHER API SETTINGS
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
-print("🌦️ WEATHER API KEY:", WEATHER_API_KEY)
+print("🌦️ WEATHER API KEY:", WEATHER_API_KEY)  
+
+CRONJOBS = [
+    # runs every 5 minutes (*/5 * * * *). For testing, use every minute (* * * * *)
+    ('*/1 * * * *', 'job.cron.fetch_weather_job'),  
+]
