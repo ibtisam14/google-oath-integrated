@@ -5,7 +5,6 @@ class JobConfig(AppConfig):
     name = 'job'
 
     def ready(self):
-        # Import only when the app is ready
         from .cron_runner import start_weather_cron
         print("🚀 Starting background weather cron...")
         start_weather_cron()

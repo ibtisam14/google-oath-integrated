@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.conf import settings
 
 def get_weather(request):
-    city = request.GET.get('city', 'London')  # default city if none provided
+    city = request.GET.get('city', 'London') 
     api_key = getattr(settings, 'WEATHER_API_KEY', None)
     if not api_key:
         return JsonResponse({"error": "Weather API key not found"}, status=500)

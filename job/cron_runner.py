@@ -9,9 +9,8 @@ def start_weather_cron():
     def run():
         while True:
             print("⏳ Fetching weather data...")
-            call_command('fetch_weather')  # calls your existing command
-            time.sleep(5)  # runs every 5 seconds (for testing)
+            call_command('fetch_weather') 
+            time.sleep(5)  
 
-    # Run the function in a separate thread so it doesn't block Django
     thread = threading.Thread(target=run, daemon=True)
     thread.start()
