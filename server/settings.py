@@ -158,6 +158,6 @@ print("🔍 FACEBOOK CLIENT ID:", FACEBOOK_CLIENT_ID)
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 print("🌦️ WEATHER API KEY:", WEATHER_API_KEY)  
 
-CRONJOBS = [
-    ('*/1 * * * *', 'django.core.management.call_command', ['fetch_weather']),
-]
+#CRONJOBS = [
+#    ('*/1 * * * *', 'django.core.management.call_command', ['fetch_weather']),
+# ]
