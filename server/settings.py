@@ -159,6 +159,5 @@ WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 print("🌦️ WEATHER API KEY:", WEATHER_API_KEY)  
 
 CRONJOBS = [
-    # runs every 5 minutes (*/5 * * * *). For testing, use every minute (* * * * *)
-    ('*/1 * * * *', 'job.cron.fetch_weather_job'),  
+    ('*/1 * * * *', 'django.core.management.call_command', ['fetch_weather']),
 ]
