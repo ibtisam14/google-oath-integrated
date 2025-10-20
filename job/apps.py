@@ -1,7 +1,9 @@
+# job/apps.py
 from django.apps import AppConfig
 import threading
 import time
 import requests
+import os
 
 
 class JobConfig(AppConfig):
@@ -10,22 +12,29 @@ class JobConfig(AppConfig):
 
     def ready(self):
         """
-        This runs automatically when Django starts.
-        It launches a background thread that fetches weather data every 60 seconds.
+        Start a background thread after Django is ready,
+        to schedule weather updates every 60 seconds.
         """
-        from django.conf import settings
-        from django.utils import timezone
-        from job.models import WeatherData  # ✅ imported here (after apps are ready)
 
-        def fetch_weather_periodically():
-            while True:
+        # ✅ Prevent duplicate thread from Django's autoreloader
+        if os.environ.get('RUN_MAIN') != 'true':
+            return
+
+        def start_scheduler():
+            # Wait a few seconds to ensure Django DB is ready
+            time.sleep(5)
+
+            from django.conf import settings
+            from django.utils import timezone
+            from job.models import WeatherData
+
+            def fetch_weather():
                 try:
                     city = "Karachi"
                     api_key = settings.WEATHER_API_KEY
                     if not api_key:
                         print("⚠️ WEATHER_API_KEY not found")
-                        time.sleep(60)
-                        continue
+                        return
 
                     url = f"https://api.weatherapi.com/v1/current.json?key={api_key}&q={city}"
                     response = requests.get(url)
@@ -33,24 +42,23 @@ class JobConfig(AppConfig):
 
                     if response.status_code != 200:
                         print(f"❌ Failed to fetch weather: {data}")
-                        time.sleep(60)
-                        continue
-
-                    weather = WeatherData.objects.create(
-                        city=data["location"]["name"],
-                        temperature_c=data["current"]["temp_c"],
-                        condition=data["current"]["condition"]["text"],
-                        humidity=data["current"]["humidity"],
-                        wind_kph=data["current"]["wind_kph"],
-                    )
-
-                    print(f"✅ [{timezone.now()}] Saved weather for {weather.city}")
+                    else:
+                        weather = WeatherData.objects.create(
+                            city=data["location"]["name"],
+                            temperature_c=data["current"]["temp_c"],
+                            condition=data["current"]["condition"]["text"],
+                            humidity=data["current"]["humidity"],
+                            wind_kph=data["current"]["wind_kph"],
+                        )
+                        print(f"✅ [{timezone.now()}] Saved weather for {weather.city}")
 
                 except Exception as e:
                     print(f"⚠️ Weather fetch error: {e}")
 
-                # Sleep for 60 seconds (1 minute)
-                time.sleep(60)
+                # Schedule the next run after 60 seconds
+                threading.Timer(60, fetch_weather).start()
 
-        # 🧵 Start the periodic weather fetch in a daemon thread
-        threading.Thread(target=fetch_weather_periodically, daemon=True).start()
+            # Start first fetch
+            fetch_weather()
+
+        threading.Thread(target=start_scheduler, daemon=True).start()
