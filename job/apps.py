@@ -1,25 +1,22 @@
+# job/apps.py
 from django.apps import AppConfig
-import threading
-import time
 from django.core.management import call_command
+import threading
 
 class JobConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'job'
 
     def ready(self):
-        if hasattr(self, 'scheduler_started'):
+        if getattr(self, 'scheduler_started', False):
             return
         self.scheduler_started = True
 
-        def run_cron_jobs():
-            time.sleep(5)
+        def run_fetch_weather():
             while True:
-                print("⏳ Running fetch_weather command...")
-                call_command('fetch_weather') 
-                print("✅ Done! Waiting 5 second before next run...")
-                time.sleep(5)
+                print("⏳ Auto fetching weather data...")
+                call_command('fetch_weather')
+                threading.Event().wait(60)  # waits 60 seconds between runs
 
-        thread = threading.Thread(target=run_cron_jobs, daemon=True)
-        thread.start()
+        threading.Thread(target=run_fetch_weather, daemon=True).start()
         print("🚀 Weather scheduler started in background!")
